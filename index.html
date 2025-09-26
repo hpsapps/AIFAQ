@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI FAQ for Teachers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fafbfc;
+            min-height: 100vh;
+            padding: 2rem 0;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            color: #e2e8f0;
+            background: #1a1a2e;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .container {
+            background: #2d3748;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #78013D 0%, #A0154D 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+            position: relative;
+        }
+
+        body.dark-mode .header {
+            background: linear-gradient(135deg, #78013D 0%, #5A0129 100%);
+        }
+
+        .dark-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .dark-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 3rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .content {
+            color: #e2e8f0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            color: #78013D;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .section h2 {
+            color: #E879A4;
+            border-bottom-color: #4a5568;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #e0e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fafbfc;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .faq-item {
+            border-color: #4a5568;
+            background: #374151;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #78013D;
+        }
+
+        body.dark-mode .faq-item:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border-color: #E879A4;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: #f8fafc;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2d3748;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .faq-question {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+
+        .faq-question:hover {
+            background: #fce7f3;
+            color: #78013D;
+        }
+
+        body.dark-mode .faq-question:hover {
+            background: #553c5b;
+            color: #E879A4;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+        }
+
+        body.dark-mode .faq-answer {
+            background: #2d3748;
+        }
+
+        .faq-answer.active {
+            max-height: 1000px;
+        }
+
+        .faq-answer-content {
+            padding: 1.5rem;
+            color: #4a5568;
+            line-height: 1.7;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .faq-answer-content {
+            color: #cbd5e0;
+        }
+
+        .faq-answer-content p {
+            margin-bottom: 1rem;
+        }
+
+        .faq-answer-content ul {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .faq-answer-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-answer-content code {
+            background: #f7fafc;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #78013D;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .faq-answer-content code {
+            background: #4a5568;
+            color: #E879A4;
+        }
+
+        .faq-answer-content strong {
+            color: #2d3748;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .faq-answer-content strong {
+            color: #f7fafc;
+        }
+
+        .guide-link {
+            background: linear-gradient(135deg, #78013D 0%, #A0154D 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 3rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .guide-link {
+            background: linear-gradient(135deg, #78013D 0%, #5A0129 100%);
+        }
+
+        .guide-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            border: 2px solid white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .guide-link a:hover {
+            background: white;
+            color: #78013D;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0 1rem;
+                border-radius: 12px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 2rem 1.5rem;
+            }
+
+            .section h2 {
+                font-size: 1.5rem;
+            }
+
+            .faq-question {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+
+            .faq-answer-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="dark-toggle" id="darkToggle">🌙 Dark Mode</button>
+            <h1>AI FAQ for Teachers</h1>
+            <p>Your practical guide to using AI tools in education</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>Getting Started</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">I'm new to AI tools. Where should I start?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Start small with something familiar and low-stakes. Try having AI help you write a parent email you've written many times before, or create a simple worksheet for a topic you know well. Compare the AI output to what you would have created yourself - this helps you understand how the AI thinks and produces content.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Which AI tool should I try first?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>If you have access to NSW EduChat, start there as it's designed for education. Otherwise, ChatGPT is user-friendly and versatile. Create a free account and experiment with simple tasks like <em>"Help me write a friendly reminder email to parents about library books."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">I'm worried about making mistakes or getting poor results. What should I do?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>This is exactly why you start with low-stakes tasks! Try AI for something you could easily do yourself, so you can spot problems and learn what works. Never use AI for anything critical until you're confident in how it behaves.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Effective Usage</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">How do I get better results from AI?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Be specific and provide context. Instead of "Create a lesson plan," try <em>"Create a 45-minute Year 3 science lesson about plant life cycles, including a hands-on activity for 25 students with limited materials."</em> The more details you provide, the better the output.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What's the best way to ask AI for help with lesson planning?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Include these details:</p>
+                            <ul>
+                                <li>Year level and subject</li>
+                                <li>Learning objectives or curriculum standards</li>
+                                <li>Time available</li>
+                                <li>Class size and any special considerations</li>
+                                <li>Available resources</li>
+                                <li>Desired activity types</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">How can AI help with differentiation?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Ask AI to create multiple versions of the same content at different levels. For example: <em>"Create this comprehension passage at three reading levels: below grade level, at grade level, and above grade level for Year 4 students."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Can AI help with assessment and feedback?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes! AI excels at creating rubrics, generating diverse question types, and helping phrase constructive feedback. Try: <em>"Create a rubric for assessing Year 6 persuasive writing with clear criteria and student-friendly language."</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Administrative Tasks</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">How can AI help me save time on emails and communications?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>AI is excellent for drafting routine communications. Give it the key points and ask for appropriate tone. For example: <em>"Write a polite email to parents explaining that their child needs to complete missing homework. Keep it supportive and solution-focused."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What about creating worksheets and resources?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>AI can quickly generate content, but always review for accuracy and appropriateness. Try: <em>"Create 10 word problems for Year 5 multiplication using real-world scenarios that would interest 10-11 year olds."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Can AI help with report writing?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>AI can help generate comment bank phrases and suggest ways to phrase observations constructively. But remember - the insights about individual students must come from you.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Quality and Ethics</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">How do I know if AI-generated content is accurate?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Always fact-check important information, especially in subjects like science, history, or current events. Use AI as a starting point, not the final word. Cross-reference with reliable sources.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Is it ethical to use AI for teaching materials?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Yes, when used thoughtfully. AI is a tool like any other - it's how you use it that matters. Always review and personalize AI content for your students. Be transparent with colleagues about your AI use.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Should I tell students when I've used AI?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Consider your school's policy, but generally transparency builds trust. You might say <em>"I used AI to help create the first draft of this, then adapted it specifically for our class."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What shouldn't I use AI for?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Avoid AI for:</p>
+                            <ul>
+                                <li>Final grades or high-stakes assessments without review</li>
+                                <li>Sensitive communications with parents about serious issues</li>
+                                <li>Content about controversial topics without fact-checking</li>
+                                <li>Anything that replaces your professional judgment about individual students</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Tips and Tricks</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">How can I write better prompts?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>Getting Better Prompts:</strong></p>
+                            <ul>
+                                <li><strong>Be specific about format:</strong> "Create a table with three columns" or "Write this as bullet points"</li>
+                                <li><strong>Specify audience:</strong> "Write this for parents" vs "Write this for Year 3 students"</li>
+                                <li><strong>Ask for examples:</strong> "Include three specific examples"</li>
+                                <li><strong>Request multiple options:</strong> "Give me three different approaches"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What is markdown and how can it help?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>When asking AI to create structured content, mention markdown formatting:</p>
+                            <ul>
+                                <li>"Create a lesson plan using markdown headings and bullet points"</li>
+                                <li>"Format this as a table using markdown"</li>
+                                <li>"Use markdown to make the important parts bold"</li>
+                            </ul>
+                            <p>This makes the output more organized and easier to copy into other documents.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What if the first response isn't perfect?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>Iterative Prompting:</strong> Don't expect perfection on the first try:</p>
+                            <ol>
+                                <li>Start with a basic request</li>
+                                <li>Ask for modifications: "Make this more engaging for reluctant readers"</li>
+                                <li>Request additions: "Add an extension activity for fast finishers"</li>
+                                <li>Refine tone: "Make the language more formal/casual/encouraging"</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What are some time-saving phrases I can use?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p><strong>Time-Saving Phrases:</strong></p>
+                            <ul>
+                                <li>"In the style of..." (Roald Dahl, a newspaper article, etc.)</li>
+                                <li>"Appropriate for..." (struggling readers, gifted students, EAL learners)</li>
+                                <li>"Include scaffolding for..."</li>
+                                <li>"Make this more engaging by..."</li>
+                                <li>"Simplify this without losing the key concepts"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Troubleshooting</h2>
+
+                <div class="faq-item">
+                    <button class="faq-question">The AI keeps giving me generic responses. How do I fix this?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Add more specific context and constraints. Instead of asking for "a science experiment," try <em>"a 15-minute chemistry demonstration for Year 8 using only materials found in a typical classroom."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">How do I handle AI content that's too advanced or too simple?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>Be explicit about the level: <em>"Explain photosynthesis for Year 4 students who are just learning about plants"</em> or <em>"Challenge Year 10 students who already understand basic chemistry."</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">What if the AI gives me wrong information?</button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-content">
+                            <p>This happens! Always verify factual content, especially in STEM subjects. Use AI for structure and ideas, but confirm accuracy with reliable sources.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="guide-link">
+                <p style="margin-bottom: 1rem;">Ready to dive deeper?</p>
+                <a href="INSERT_YOUR_LINK_HERE" target="_blank">View Complete AI Guide for Teachers</a>
+                <p style="margin-top: 1rem; opacity: 0.8;">For detailed tutorials, examples, and advanced strategies</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load dark mode preference and set up toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkToggle = document.getElementById('darkToggle');
+            
+            // Set up dark mode toggle
+            darkToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                
+                if (isDark) {
+                    this.innerHTML = '☀️ Light Mode';
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    this.innerHTML = '🌙 Dark Mode';
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+
+            // Load saved dark mode preference
+            const darkMode = localStorage.getItem('darkMode');
+            if (darkMode === 'enabled') {
+                document.body.classList.add('dark-mode');
+                darkToggle.innerHTML = '☀️ Light Mode';
+            }
+
+            // FAQ functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const answer = this.nextElementSibling;
+                    const isActive = answer.classList.contains('active');
+
+                    // Close all answers
+                    document.querySelectorAll('.faq-answer').forEach(ans => {
+                        ans.classList.remove('active');
+                    });
+                    document.querySelectorAll('.faq-question').forEach(q => {
+                        q.classList.remove('active');
+                    });
+
+                    // Open clicked answer if it wasn't already active
+                    if (!isActive) {
+                        answer.classList.add('active');
+                        this.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
